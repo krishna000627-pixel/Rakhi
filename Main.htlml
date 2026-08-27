@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Happy Raksha Bandhan, Sis! 🎀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --yellow:#FFD93D;
+    --pink:#FF6FA9;
+    --sky:#4EC5F1;
+    --grass:#5FD068;
+    --ink:#1A1A2E;
+    --cream:#FFF8E7;
+    --orange:#FF9B42;
+    --purple:#B98CE0;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{
+    margin:0; height:100%; overflow:hidden;
+    background:var(--cream);
+    font-family:'Nunito',sans-serif;
+    color:var(--ink);
+    position:fixed; inset:0; width:100%;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+  }
+  h1,h2,h3,.display{ font-family:'Baloo 2', cursive; font-weight:800; }
+
+  .scribble-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.06;
+    background-image: radial-gradient(circle, var(--ink) 2px, transparent 2px);
+    background-size: 28px 28px;
+  }
+  #confetti-layer{ position:fixed; inset:0; pointer-events:none; z-index:5; overflow:hidden; }
+  .confetti-piece{ position:absolute; top:-40px; width:12px; height:12px; opacity:0.9; animation: fall linear infinite; }
+  @keyframes fall{ to{ transform: translateY(110vh) rotate(720deg); } }
+
+  #app{ position:fixed; inset:0; z-index:2; }
+  .page{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding: max(24px, env(safe-area-inset-top)) 22px max(24px, env(safe-area-inset-bottom));
+    opacity:0; pointer-events:none;
+    transform: translateX(40px) scale(0.98);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    overflow:hidden;
+  }
+  .page.active{ opacity:1; pointer-events:auto; transform: translateX(0) scale(1); }
+  .page.exit-left{ transform: translateX(-40px) scale(0.98); }
+
+  .page-1{ background: radial-gradient(circle at 15% 20%, rgba(255,217,61,0.5), transparent 40%), radial-gradient(circle at 85% 15%, rgba(78,197,241,0.4), transparent 40%), radial-gradient(circle at 50% 90%, rgba(255,111,169,0.35), transparent 45%); }
+  .page-2{ background: radial-gradient(circle at 80% 10%, rgba(255,217,61,0.4), transparent 45%), radial-gradient(circle at 10% 90%, rgba(95,208,104,0.3), transparent 45%); }
+  .page-3{ background: radial-gradient(circle at 20% 15%, rgba(255,111,169,0.3), transparent 45%); }
+  .page-4{ background: radial-gradient(circle at 80% 20%, rgba(185,140,224,0.3), transparent 45%); }
+  .page-5{ background: radial-gradient(circle at 85% 85%, rgba(78,197,241,0.35), transparent 45%); }
+  .page-6{ background: radial-gradient(circle at 50% 20%, rgba(255,217,61,0.45), transparent 45%); }
+
+  .floaty{ position:absolute; font-size:26px; animation: floaty 5s ease-in-out infinite; z-index:1; }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0) rotate(0deg);} 50%{ transform:translateY(-20px) rotate(12deg);} }
+
+  .card{
+    background:#fff; border:4px solid var(--ink); border-radius:28px;
+    box-shadow:8px 8px 0 var(--ink); padding:26px 22px; position:relative;
+    max-width:420px; width:100%; max-height:100%; overflow-y:auto;
+  }
+  .tape{
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(-4deg);
+    background:rgba(255,217,61,0.9); border:2px solid var(--ink); padding:4px 22px;
+    font-family:'Baloo 2',cursive; font-weight:600; font-size:12px; white-space:nowrap;
+  }
+  h2.section-title{ font-size:clamp(1.4rem, 6vw, 1.9rem); margin:0 0 12px; display:flex; align-items:center; gap:8px; justify-content:center; }
+
+  /* ---------- Page 1 ---------- */
+  .ask-stage{ position:relative; width:100%; max-width:360px; height:min(58vh, 460px); margin:0 auto; }
+  .rakhi-wrap{ width:132px; height:132px; margin:0 auto 10px; animation: dropIn 0.9s cubic-bezier(.34,1.56,.64,1) both, sway 4s ease-in-out 0.9s infinite; }
+  @keyframes dropIn{ 0%{ transform:translateY(-200px) rotate(-30deg) scale(0.5); opacity:0;} 100%{ transform:translateY(0) rotate(0deg) scale(1); opacity:1;} }
+  @keyframes sway{ 0%,100%{ transform:rotate(-6deg);} 50%{ transform:rotate(6deg);} }
+  .rakhi-svg{ width:100%; height:100%; filter:drop-shadow(0 10px 14px rgba(26,26,46,0.25)); }
+
+  h1.display{ font-size:clamp(1.9rem, 8vw, 3.1rem); line-height:1.08; margin:0 0 10px; }
+  .sister-name{ color:var(--orange); -webkit-text-stroke: 2px var(--ink); }
+  .ask-line{ font-size:clamp(1rem, 4.4vw, 1.3rem); font-weight:800; max-width:380px; margin:6px auto 26px; }
+
+  .btn-zone{ position:relative; width:100%; max-width:320px; height:150px; margin:0 auto; }
+  .btn{
+    font-family:'Baloo 2',cursive; font-weight:700; font-size:17px;
+    border:3px solid var(--ink); border-radius:100px; padding:12px 30px; cursor:pointer;
+    box-shadow:4px 4px 0 var(--ink); transition: transform 0.15s ease, box-shadow 0.15s ease, top 0.28s cubic-bezier(.34,1.56,.64,1), left 0.28s cubic-bezier(.34,1.56,.64,1);
+    background:#fff; white-space:nowrap;
+  }
+  .btn:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+  .btn-yes{ background:var(--grass); position:absolute; left:50%; top:20px; transform:translateX(calc(-50% - 70px)); }
+  .btn-no{ background:#fff; position:absolute; left:50%; top:20px; transform:translateX(calc(-50% + 70px)); }
+
+  /* ---------- Gift box ---------- */
+  .gift-box{ width:150px; height:132px; margin:14px auto 8px; position:relative; cursor:pointer; user-select:none; }
+  .gift-lid{ position:absolute; top:0; left:-8px; right:-8px; height:34px; background:var(--pink); border:4px solid var(--ink); border-radius:10px; z-index:3; transform-origin: left center; transition: transform 0.6s cubic-bezier(.34,1.56,.64,1); }
+  .gift-base{ position:absolute; bottom:0; left:0; right:0; height:98px; background:var(--sky); border:4px solid var(--ink); border-radius:0 0 10px 10px; overflow:hidden; }
+  .gift-ribbon-v{ position:absolute; top:0; bottom:0; left:50%; width:20px; margin-left:-10px; background:var(--yellow); border-left:4px solid var(--ink); border-right:4px solid var(--ink); }
+  .gift-box.open .gift-lid{ transform: rotate(-115deg) translateY(6px); }
+  .gift-box:not(.open):hover{ animation: shake 0.5s ease-in-out infinite; }
+  @keyframes shake{ 0%,100%{ transform:rotate(0deg);} 25%{ transform:rotate(-4deg);} 75%{ transform:rotate(4deg);} }
+  .gift-hint{ font-family:'Baloo 2',cursive; font-weight:600; font-size:13px; color:var(--ink); opacity:0.7; }
+
+  .message-reveal{ max-height:0; overflow:hidden; opacity:0; transition: max-height 0.7s ease, opacity 0.6s ease, margin 0.5s ease; }
+  .message-reveal.show{ max-height:600px; opacity:1; margin-top:14px; }
+  .message-reveal p{ font-size:0.98rem; font-weight:600; line-height:1.55; text-align:left; margin:0 0 10px; }
+  .message-reveal p.signoff{ text-align:right; font-family:'Baloo 2',cursive; font-size:1.1rem; color:var(--pink); -webkit-text-stroke:0.5px var(--ink); }
+
+  /* ---------- Promises ---------- */
+  .promises{ display:flex; flex-direction:column; gap:12px; margin-top:6px; }
+  .promise{ display:flex; align-items:center; gap:12px; background:var(--cream); border:3px solid var(--ink); border-radius:16px; padding:12px 14px; opacity:0; transform:translateX(-30px); transition: transform 0.5s ease, opacity 0.5s ease; }
+  .promise.in-view{ opacity:1; transform:translateX(0); }
+  .promise .emoji{ font-size:22px; flex-shrink:0; }
+  .promise p{ margin:0; font-weight:700; font-size:0.92rem; text-align:left; }
+
+  /* ---------- Quiz ---------- */
+  .quiz-q{ display:none; }
+  .quiz-q.active{ display:block; }
+  .quiz-question{ font-family:'Baloo 2',cursive; font-weight:700; font-size:1.05rem; margin:0 0 14px; }
+  .quiz-opts{ display:flex; flex-direction:column; gap:10px; }
+  .quiz-opt{
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:0.95rem;
+    border:3px solid var(--ink); border-radius:14px; padding:12px 14px; background:var(--cream);
+    cursor:pointer; text-align:left; transition: transform 0.15s ease, background 0.2s ease;
+  }
+  .quiz-opt:active{ transform:scale(0.97); }
+  .quiz-opt.picked{ background:var(--yellow); }
+  .quiz-feedback{
+    margin-top:14px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--pink);
+    opacity:0; transform:translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; font-size:0.95rem;
+  }
+  .quiz-feedback.show{ opacity:1; transform:translateY(0); }
+  .quiz-progress{ display:flex; gap:6px; justify-content:center; margin-bottom:16px; }
+  .quiz-progress span{ width:22px; height:6px; border-radius:4px; background:#eee; border:2px solid var(--ink); }
+  .quiz-progress span.done{ background:var(--grass); }
+  .quiz-next{
+    margin-top:16px; font-family:'Baloo 2',cursive; font-weight:700; font-size:14px;
+    border:3px solid var(--ink); border-radius:100px; padding:8px 22px; background:var(--sky);
+    box-shadow:3px 3px 0 var(--ink); cursor:pointer; display:none;
+  }
+  .quiz-next.show{ display:inline-block; }
+
+  /* ---------- Heist ---------- */
+  .heist-stage{ width:100%; max-width:320px; margin:6px auto 0; }
+  .heist-svg{ width:100%; height:auto; overflow:visible; }
+  .runner{ animation: heistRun 3.2s ease-in-out infinite; }
+  @keyframes heistRun{
+    0%{ transform: translate(66px, 112px) scale(0.9) rotate(0deg); }
+    8%{ transform: translate(66px, 112px) scale(1.05) rotate(-8deg); }
+    35%{ transform: translate(220px, 55px) scale(1) rotate(6deg); }
+    45%{ transform: translate(255px, 34px) scale(1) rotate(0deg); }
+    60%{ transform: translate(320px, 24px) scale(0.85) rotate(0deg); opacity:1; }
+    62%{ opacity:0; } 100%{ opacity:0; transform: translate(320px, 24px) scale(0.85); }
+  }
+  .runner .leg{ transform-box: fill-box; transform-origin: top center; }
+  .runner .leg.left{ animation: legRun 0.32s ease-in-out infinite; }
+  .runner .leg.right{ animation: legRun 0.32s ease-in-out infinite 0.16s; }
+  @keyframes legRun{ 0%,100%{ transform:rotate(22deg);} 50%{ transform:rotate(-22deg);} }
+  .choc-piece{ animation: chocWobble 3.2s ease-in-out infinite; transform-origin: center; }
+  @keyframes chocWobble{
+    0%,30%{ opacity:1; transform:translateY(0) rotate(0deg); }
+    38%{ opacity:1; transform:translateY(-6px) rotate(-15deg); }
+    46%{ opacity:0; transform:translateY(-20px) rotate(30deg); }
+    100%{ opacity:0; }
+  }
+  .zoom-text{ opacity:0; animation: zoomPop 3.2s ease-in-out infinite; }
+  @keyframes zoomPop{
+    0%,40%{ opacity:0; transform:translateX(-20px); }
+    50%{ opacity:1; transform:translateX(0); } 75%{ opacity:1; }
+    85%,100%{ opacity:0; transform:translateX(20px); }
+  }
+  .jar-lid{ transform-box: fill-box; transform-origin: center bottom; animation: jarWobble 3.2s ease-in-out infinite; }
+  @keyframes jarWobble{ 0%,55%{ transform:rotate(0deg);} 58%{ transform:rotate(-8deg) translateY(-2px);} 62%{ transform:rotate(6deg) translateY(-4px);} 66%,100%{ transform:rotate(0deg);} }
+
+  /* ---------- Mascot ---------- */
+  .mascot-wrap{ width:170px; margin:0 auto 12px; position:relative; }
+  .mascot{ width:100%; animation: mascotBounce 2.4s ease-in-out infinite; }
+  @keyframes mascotBounce{ 0%,100%{ transform:translateY(0) rotate(-2deg);} 50%{ transform:translateY(-14px) rotate(2deg);} }
+  .mascot .wave-arm{ animation: waveArm 1.1s ease-in-out infinite; transform-origin: 158px 148px; }
+  @keyframes waveArm{ 0%,100%{ transform:rotate(0deg);} 50%{ transform:rotate(-24deg);} }
+  .mascot .blush{ animation: blushPulse 2.4s ease-in-out infinite; }
+  @keyframes blushPulse{ 0%,100%{ opacity:0.55;} 50%{ opacity:0.85;} }
+  .speech-bubble{ display:inline-block; background:#fff; border:3px solid var(--ink); border-radius:20px; padding:10px 18px; font-family:'Baloo 2',cursive; font-weight:600; box-shadow:5px 5px 0 var(--ink); }
+
+  /* ---------- Nav ---------- */
+  .page-nav{
+    position:fixed; bottom:max(18px, env(safe-area-inset-bottom)); left:0; right:0;
+    display:flex; align-items:center; justify-content:center; gap:14px; z-index:10;
+  }
+  .nav-arrow{
+    width:42px; height:42px; border-radius:50%; background:#fff; border:3px solid var(--ink);
+    display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer;
+    box-shadow:3px 3px 0 var(--ink); font-family:'Baloo 2',cursive;
+  }
+  .nav-arrow.disabled{ opacity:0.3; pointer-events:none; }
+  .dots{ display:flex; gap:8px; }
+  .dot{ width:9px; height:9px; border-radius:50%; background:#fff; border:2px solid var(--ink); transition: background 0.3s ease, transform 0.3s ease; }
+  .dot.active{ background:var(--pink); transform:scale(1.3); }
+</style>
+</head>
+<body>
+
+<div class="scribble-bg"></div>
+<div id="confetti-layer"></div>
+
+<div id="app">
+
+  <!-- PAGE 1 -->
+  <div class="page page-1 active" data-page="1">
+    <span class="floaty" style="top:10%; left:8%; animation-delay:0s;">✨</span>
+    <span class="floaty" style="top:16%; right:10%; animation-delay:1.2s;">🎈</span>
+    <span class="floaty" style="bottom:16%; left:10%; animation-delay:2s;">🪁</span>
+
+    <div class="ask-stage">
+      <div class="rakhi-wrap">
+        <svg class="rakhi-svg" viewBox="0 0 200 200">
+          <defs>
+            <radialGradient id="beadGrad" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#FFE8A3"/>
+              <stop offset="100%" stop-color="#FF9B42"/>
+            </radialGradient>
+            <radialGradient id="beadGrad2" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#FFF4B8"/>
+              <stop offset="100%" stop-color="#FFD93D"/>
+            </radialGradient>
+          </defs>
+          <path d="M100 44 Q70 10 40 30 Q20 44 30 60" stroke="#1A1A2E" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M100 44 Q130 10 160 30 Q180 44 170 60" stroke="#1A1A2E" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="100" cy="100" r="56" fill="url(#beadGrad)" stroke="#1A1A2E" stroke-width="6"/>
+          <circle cx="100" cy="100" r="35" fill="url(#beadGrad2)" stroke="#1A1A2E" stroke-width="5"/>
+          <circle cx="100" cy="100" r="15" fill="#FF6FA9" stroke="#1A1A2E" stroke-width="5"/>
+          <circle cx="88" cy="88" r="4" fill="#fff" opacity="0.8"/>
+          <g stroke="#1A1A2E" stroke-width="5" fill="none">
+            <path d="M100 47 L100 22"/><path d="M153 100 L178 100"/><path d="M100 153 L100 178"/><path d="M47 100 L22 100"/>
+          </g>
+          <circle cx="100" cy="18" r="7" fill="#4EC5F1" stroke="#1A1A2E" stroke-width="4"/>
+          <circle cx="182" cy="100" r="7" fill="#5FD068" stroke="#1A1A2E" stroke-width="4"/>
+          <circle cx="100" cy="182" r="7" fill="#4EC5F1" stroke="#1A1A2E" stroke-width="4"/>
+          <circle cx="18" cy="100" r="7" fill="#5FD068" stroke="#1A1A2E" stroke-width="4"/>
+          <path d="M60 148 Q56 170 60 188" stroke="#1A1A2E" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M140 148 Q144 170 140 188" stroke="#1A1A2E" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="60" cy="192" r="6" fill="#FF6FA9" stroke="#1A1A2E" stroke-width="3"/>
+          <circle cx="140" cy="192" r="6" fill="#FFD93D" stroke="#1A1A2E" stroke-width="3"/>
+        </svg>
+      </div>
+
+      <h1 class="display">Happy Raksha Bandhan,<br><span class="sister-name">Sis</span>!</h1>
+      <p class="ask-line">I made something for u.<br>Do you want to see? 👀</p>
+
+      <div class="btn-zone">
+        <button class="btn btn-yes" id="yesBtn" onclick="goTo(2)">Yes, show me! 🎉</button>
+        <button class="btn btn-no" id="noBtn" onclick="dodgeNo()">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: gift + message -->
+  <div class="page page-2" data-page="2">
+    <div class="card">
+      <div class="tape">tap to open</div>
+      <h2 class="section-title">A little something 🎁</h2>
+      <div class="gift-box" id="giftBox" onclick="openGift()">
+        <div class="gift-base"><div class="gift-ribbon-v"></div></div>
+        <div class="gift-lid"><div class="gift-ribbon-v"></div></div>
+      </div>
+      <p class="gift-hint" id="giftHint">tap the box ↑</p>
+      <div class="message-reveal" id="messageReveal">
+        <p>Okay okay, real talk for one second (I promise it won't last).</p>
+        <p>Thank you for every rakhi you've tied on me, every time you covered for me, and every time you pretended not to notice I finished your snacks. This year I couldn't find the perfect gift, so I built you this instead — glitter, animations and all.</p>
+        <p>Here's my promise for this year 👉 next page (I actually mean it)</p>
+        <p class="signoff">— your not-so-little brother</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: promises -->
+  <div class="page page-3" data-page="3">
+    <div class="card">
+      <h2 class="section-title">This year I promise to 🤙</h2>
+      <p style="font-weight:700; opacity:0.7; margin:-6px 0 12px; font-size:0.85rem;">(100% legally binding, no cap)</p>
+      <div class="promises" id="promiseList">
+        <div class="promise"><span class="emoji">🍫</span><p>I will absolutely steal all your chocolates. Every. Single. One.</p></div>
+        <div class="promise"><span class="emoji">📱</span><p>Your phone is now legally mine, effective immediately</p></div>
+        <div class="promise"><span class="emoji">💸</span><p>If you give me money, I will definitely not return it</p></div>
+        <div class="promise"><span class="emoji">🫂</span><p>...but I will also show up instantly if you actually need me. No jokes on that one.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: quiz -->
+  <div class="page page-4" data-page="4">
+    <div class="card">
+      <h2 class="section-title">Quick quiz for u 🧠</h2>
+      <div class="quiz-progress" id="quizProgress"></div>
+
+      <div class="quiz-q active" data-q="1">
+        <p class="quiz-question">Q1. Who's the better sibling?</p>
+        <div class="quiz-opts">
+          <div class="quiz-opt" onclick="answerQuiz(this, '1', 'Correct answer. You already knew that though.')">A) Obviously you</div>
+          <div class="quiz-opt" onclick="answerQuiz(this, '1', 'Wrong. Try again — actually no, keep this one, its funnier.')">B) Me, clearly</div>
+          <div class="quiz-opt" onclick="answerQuiz(this, '1', 'A trick answer. Respect. Still wrong tho.')">C) Its a tie</div>
+        </div>
+        <p class="quiz-feedback" id="fb1"></p>
+      </div>
+
+      <div class="quiz-q" data-q="2">
+        <p class="quiz-question">Q2. Will u gift me an iPhone?</p>
+        <div class="quiz-opts">
+          <div class="quiz-opt" onclick="answerQuiz(this, '2', 'Correct answer! I will be waiting patiently (impatiently).')">A) Yes, obviously</div>
+          <div class="quiz-opt" onclick="answerQuiz(this, '2', 'Wrong answer. This website took me actual effort btw.')">B) No</div>
+          <div class="quiz-opt" onclick="answerQuiz(this, '2', 'Acceptable. I will take the maybe and turn it into a yes.')">C) Maybe, if you behave</div>
+        </div>
+        <p class="quiz-feedback" id="fb2"></p>
+      </div>
+
+      <div class="quiz-q" data-q="3">
+        <p class="quiz-question">Q3. Rate this website out of 10</p>
+        <div class="quiz-opts">
+          <div class="quiz-opt" onclick="answerQuiz(this, '3', 'Correct. Its a 10. No further questions.')">A) 10/10</div>
+          <div class="quiz-opt" onclick="answerQuiz(this, '3', 'Bold answer. I respect the honesty. Still a 10 though.')">B) 9/10, minus one for the promises page</div>
+          <div class="quiz-opt" onclick="answerQuiz(this, '3', 'Thats not an option. Try again. (its a 10)')">C) Its giving 2016 Flash website</div>
+        </div>
+        <p class="quiz-feedback" id="fb3"></p>
+      </div>
+
+      <button class="quiz-next" id="quizNextBtn" onclick="nextQuizQ()">Next question →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 5: heist animation -->
+  <div class="page page-5" data-page="5">
+    <div class="card">
+      <h2 class="section-title">Live footage of me rn 🍫</h2>
+      <div class="heist-stage">
+        <svg class="heist-svg" viewBox="0 0 320 180">
+          <!-- shelf background -->
+          <rect x="0" y="155" width="320" height="6" fill="#1A1A2E" opacity="0.15"/>
+          <rect x="240" y="60" width="8" height="95" fill="#8B5A2B" stroke="#1A1A2E" stroke-width="3" opacity="0.5"/>
+
+          <!-- chocolate jar -->
+          <g>
+            <rect x="16" y="112" width="66" height="46" rx="8" fill="#8B5A2B" stroke="#1A1A2E" stroke-width="5"/>
+            <rect x="22" y="118" width="54" height="14" rx="3" fill="#D9A25C" stroke="#1A1A2E" stroke-width="3"/>
+            <g class="jar-lid">
+              <rect x="10" y="102" width="78" height="14" rx="6" fill="#B98CE0" stroke="#1A1A2E" stroke-width="4"/>
+            </g>
+          </g>
+
+          <g class="choc-piece" style="animation-delay:0s;"><rect x="30" y="96" width="16" height="16" rx="2" fill="#6B3F1D" stroke="#1A1A2E" stroke-width="3"/></g>
+          <g class="choc-piece" style="animation-delay:0.4s;"><rect x="52" y="96" width="16" height="16" rx="2" fill="#6B3F1D" stroke="#1A1A2E" stroke-width="3"/></g>
+
+          <!-- running doodle character -->
+          <g class="runner">
+            <path class="leg left" d="M-6 40 L-6 60" stroke="#1A1A2E" stroke-width="6" stroke-linecap="round"/>
+            <path class="leg right" d="M6 40 L6 60" stroke="#1A1A2E" stroke-width="6" stroke-linecap="round"/>
+            <rect x="-20" y="16" width="40" height="26" rx="8" fill="#FF6FA9" stroke="#1A1A2E" stroke-width="5"/>
+            <circle cx="0" cy="0" r="22" fill="#FFE8A3" stroke="#1A1A2E" stroke-width="5"/>
+            <path d="M-16 -14 Q-6 -30 6 -22 Q18 -28 16 -12 Q6 -20 -4 -16 Q-10 -18 -16 -14 Z" fill="#1A1A2E"/>
+            <circle cx="-8" cy="-2" r="3.4" fill="#1A1A2E"/>
+            <circle cx="8" cy="-2" r="3.4" fill="#1A1A2E"/>
+            <path d="M-9 8 Q0 15 9 8" stroke="#1A1A2E" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <circle cx="-14" cy="4" r="4" fill="#FF9B9B" opacity="0.6"/>
+            <circle cx="14" cy="4" r="4" fill="#FF9B9B" opacity="0.6"/>
+            <rect x="-12" y="2" width="24" height="14" rx="3" fill="#6B3F1D" stroke="#1A1A2E" stroke-width="3"/>
+            <path d="M-20 26 L-32 20" stroke="#1A1A2E" stroke-width="5" stroke-linecap="round"/>
+            <path d="M20 26 L32 32" stroke="#1A1A2E" stroke-width="5" stroke-linecap="round"/>
+          </g>
+
+          <text x="225" y="55" class="zoom-text" font-family="Baloo 2" font-weight="800" font-size="24" fill="#FF6FA9" stroke="#1A1A2E" stroke-width="1">ZOOM!</text>
+        </svg>
+      </div>
+      <p style="font-weight:700; font-size:0.9rem;">(no chocolates were harmed in this animation. yet.)</p>
+    </div>
+  </div>
+
+  <!-- PAGE 6: mascot sign-off -->
+  <div class="page page-6" data-page="6">
+    <div class="mascot-wrap">
+      <svg class="mascot" viewBox="0 0 200 220">
+        <ellipse cx="100" cy="130" rx="55" ry="60" fill="#FFD93D" stroke="#1A1A2E" stroke-width="6"/>
+        <circle cx="100" cy="80" r="52" fill="#FFE8A3" stroke="#1A1A2E" stroke-width="6"/>
+        <path d="M52 58 Q58 12 100 18 Q142 10 150 60 Q130 38 110 44 Q100 38 90 44 Q70 38 52 58 Z" fill="#1A1A2E"/>
+        <circle cx="80" cy="82" r="8" fill="#1A1A2E"/>
+        <circle cx="120" cy="82" r="8" fill="#1A1A2E"/>
+        <circle cx="82.5" cy="79" r="2.4" fill="#fff"/>
+        <circle cx="122.5" cy="79" r="2.4" fill="#fff"/>
+        <path d="M76 105 Q100 122 124 105" stroke="#1A1A2E" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <circle class="blush" cx="64" cy="96" r="8" fill="#FF9B9B"/>
+        <circle class="blush" cx="136" cy="96" r="8" fill="#FF9B9B"/>
+        <rect x="58" y="150" width="84" height="46" rx="12" fill="#FF6FA9" stroke="#1A1A2E" stroke-width="6"/>
+        <path class="wave-arm" d="M140 155 Q168 140 158 118" stroke="#1A1A2E" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle class="wave-arm" cx="158" cy="118" r="9" fill="#FFE8A3" stroke="#1A1A2E" stroke-width="5"/>
+        <path d="M60 155 Q42 175 50 195" stroke="#1A1A2E" stroke-width="7" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="speech-bubble">Happy Raksha Bandhan!! 🎉</div>
+    <p style="font-family:'Baloo 2',cursive; font-weight:600; opacity:0.6; margin-top:16px; font-size:13px;">made with 🧡 (and a little html/css chaos)</p>
+  </div>
+
+</div>
+
+<div class="page-nav" id="pageNav" style="display:none;">
+  <div class="nav-arrow" id="prevBtn" onclick="prevPage()">←</div>
+  <div class="dots" id="dots"></div>
+  <div class="nav-arrow" id="nextBtn" onclick="nextPage()">→</div>
+</div>
+
+<script>
+  // ---- Confetti ----
+  const colors = ['#FFD93D','#FF6FA9','#4EC5F1','#5FD068','#FF9B42'];
+  const layer = document.getElementById('confetti-layer');
+  const total = window.innerWidth < 500 ? 22 : 36;
+  for(let i=0;i<total;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random()*100 + 'vw';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    const dur = 5 + Math.random()*6;
+    el.style.animationDuration = dur + 's';
+    el.style.animationDelay = (Math.random()*8) + 's';
+    el.style.width = el.style.height = (6 + Math.random()*8) + 'px';
+    layer.appendChild(el);
+  }
+
+  // ---- Multi-page nav ----
+  const pages = document.querySelectorAll('.page');
+  const totalPages = pages.length;
+  let current = 1;
+  const dotsWrap = document.getElementById('dots');
+  for(let i=1;i<=totalPages;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===1 ? ' active' : '');
+    d.dataset.page = i;
+    dotsWrap.appendChild(d);
+  }
+
+  function renderNav(){
+    document.getElementById('prevBtn').classList.toggle('disabled', current===1);
+    document.getElementById('nextBtn').classList.toggle('disabled', current===totalPages);
+    [...dotsWrap.children].forEach((d,idx)=> d.classList.toggle('active', idx+1===current));
+  }
+
+  function goTo(n){
+    if(n<1 || n>totalPages) return;
+    pages.forEach(p=>{
+      const pn = parseInt(p.dataset.page);
+      p.classList.remove('active','exit-left');
+      if(pn === n) p.classList.add('active');
+      else if(pn < n) p.classList.add('exit-left');
+    });
+    current = n;
+    document.getElementById('pageNav').style.display = current===1 ? 'none' : 'flex';
+    renderNav();
+    if(n===3) animatePromises();
+  }
+  function nextPage(){ goTo(current+1); }
+  function prevPage(){ goTo(current-1); }
+
+  function animatePromises(){
+    const items = document.querySelectorAll('#promiseList .promise');
+    items.forEach((el,idx)=>{
+      setTimeout(()=> el.classList.add('in-view'), idx*130);
+    });
+  }
+
+  // ---- "No" button: dodges forever, never accepted, never overlaps Yes ----
+  const dodgeLines = ["No","nuh uh","nope!","try again","not happening","nice try","absolutely not","catch me first","still no","gonna need u to tap yes"];
+  let dodgeCount = 0;
+  function dodgeNo(){
+    const zone = document.querySelector('.btn-zone');
+    const btn = document.getElementById('noBtn');
+    const yes = document.getElementById('yesBtn');
+    const zoneRect = zone.getBoundingClientRect();
+
+    const btnW = btn.offsetWidth, btnH = btn.offsetHeight;
+    const yesRect = yes.getBoundingClientRect();
+    const pad = 14;
+
+    let x, y, tries = 0, overlaps = true;
+    while(overlaps && tries < 30){
+      x = Math.random() * (zoneRect.width - btnW);
+      y = Math.random() * (zoneRect.height - btnH);
+      const btnLeft = zoneRect.left + x;
+      const btnTop = zoneRect.top + y;
+      const btnRight = btnLeft + btnW;
+      const btnBottom = btnTop + btnH;
+      overlaps = !(btnRight + pad < yesRect.left || btnLeft - pad > yesRect.right ||
+                   btnBottom + pad < yesRect.top || btnTop - pad > yesRect.bottom);
+      tries++;
+    }
+    btn.style.left = x + 'px';
+    btn.style.top = y + 'px';
+    btn.style.transform = 'none';
+
+    dodgeCount++;
+    btn.textContent = dodgeLines[dodgeCount % dodgeLines.length];
+  }
+
+  // ---- Gift box open ----
+  function openGift(){
+    const box = document.getElementById('giftBox');
+    const msg = document.getElementById('messageReveal');
+    const hint = document.getElementById('giftHint');
+    const isOpen = box.classList.toggle('open');
+    msg.classList.toggle('show', isOpen);
+    hint.textContent = isOpen ? 'tap again to close' : 'tap the box ↑';
+  }
+
+  // ---- Quiz ----
+  let quizIdx = 1;
+  const quizTotal = 3;
+  const progWrap = document.getElementById('quizProgress');
+  for(let i=1;i<=quizTotal;i++){
+    const s = document.createElement('span');
+    s.dataset.q = i;
+    progWrap.appendChild(s);
+  }
+  function answerQuiz(el, qId, feedbackText){
+    const qBlock = document.querySelector(`.quiz-q[data-q="${qId}"]`);
+    qBlock.querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('picked'));
+    el.classList.add('picked');
+    const fb = document.getElementById('fb' + qId);
+    fb.textContent = feedbackText;
+    fb.classList.add('show');
+    progWrap.querySelector(`span[data-q="${qId}"]`).classList.add('done');
+    document.getElementById('quizNextBtn').classList.add('show');
+    document.getElementById('quizNextBtn').textContent = qId == quizTotal ? "See the results →" : "Next question →";
+  }
+  function nextQuizQ(){
+    const nextBtn = document.getElementById('quizNextBtn');
+    if(quizIdx >= quizTotal){
+      nextBtn.classList.remove('show');
+      goTo(5);
+      return;
+    }
+    document.querySelector(`.quiz-q[data-q="${quizIdx}"]`).classList.remove('active');
+    quizIdx++;
+    document.querySelector(`.quiz-q[data-q="${quizIdx}"]`).classList.add('active');
+    nextBtn.classList.remove('show');
+  }
+
+  // ---- Swipe support ----
+  let touchStartX = null;
+  document.getElementById('app').addEventListener('touchstart', e=>{
+    touchStartX = e.touches[0].clientX;
+  }, {passive:true});
+  document.getElementById('app').addEventListener('touchend', e=>{
+    if(touchStartX===null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if(Math.abs(dx) > 60){
+      if(dx < 0) nextPage(); else prevPage();
+    }
+    touchStartX = null;
+  }, {passive:true});
+</script>
+
+</body>
+</html>
